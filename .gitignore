@@ -4,5 +4,3 @@ npm-debug.log
 
 temp/*
 !temp/.gitkeep
-public/photos/*
-!public/photos/.gitkeep
