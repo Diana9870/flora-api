@@ -1,7 +1,7 @@
 {
   "name": "flora-api",
   "version": "1.0.0",
-  "description": "Flora bouquets REST API — Express + Sequelize (PostgreSQL) + Joi + Multer + Swagger",
+  "description": "Flora REST API (bouquets, bestsellers, feedback) — Express + Sequelize (PostgreSQL) + Joi + Multer + Swagger",
   "type": "commonjs",
   "main": "server.js",
   "engines": {
@@ -10,7 +10,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "seed": "node seed/seedBouquets.js"
+    "seed": "node seed/seedBouquets.js",
+    "seed:bouquets": "node seed/seedBouquets.js",
+    "seed:bestsellers": "node seed/seedBestsellers.js",
+    "seed:feedback": "node seed/seedFeedback.js",
+    "seed:all": "npm run seed:bouquets && npm run seed:bestsellers && npm run seed:feedback"
   },
   "dependencies": {
     "cors": "^2.8.5",

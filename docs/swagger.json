@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Flora API",
-    "description": "REST API for the Flora bouquets collection — CRUD, favorite toggling and photo upload.",
+    "description": "REST API for the Flora shop — bouquets (CRUD, favorite toggling, photo upload), bestsellers (CRUD, photo upload) and customer feedback (CRUD).",
     "version": "1.0.0"
   },
   "servers": [
@@ -10,7 +10,9 @@
     { "url": "https://flora-api-q559.onrender.com/api", "description": "Production (Render)" }
   ],
   "tags": [
-    { "name": "Bouquets", "description": "Endpoints for the bouquets collection" }
+    { "name": "Bouquets", "description": "Endpoints for the bouquets collection" },
+    { "name": "Bestsellers", "description": "Endpoints for the bestsellers collection" },
+    { "name": "Feedback", "description": "Endpoints for customer feedback" }
   ],
   "paths": {
     "/bouquets": {
@@ -184,6 +186,262 @@
           }
         }
       }
+    },
+    "/bestsellers": {
+      "get": {
+        "tags": ["Bestsellers"],
+        "summary": "Get all bestsellers",
+        "description": "Returns bestsellers ordered by salesCount (descending) by default.",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Page number (optional, requires limit)" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Items per page (optional, requires page)" },
+          { "name": "category", "in": "query", "schema": { "type": "string" }, "description": "Filter by category" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of bestsellers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "bestsellers": { "type": "array", "items": { "$ref": "#/components/schemas/Bestseller" } },
+                    "total": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Bestsellers"],
+        "summary": "Create a new bestseller",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BestsellerCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bestseller created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
+      }
+    },
+    "/bestsellers/{id}": {
+      "get": {
+        "tags": ["Bestsellers"],
+        "summary": "Get a bestseller by id",
+        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "responses": {
+          "200": {
+            "description": "Bestseller found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Bestsellers"],
+        "summary": "Update a bestseller",
+        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/BestsellerUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bestseller updated",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+          },
+          "400": {
+            "description": "Empty or invalid body",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Bestsellers"],
+        "summary": "Delete a bestseller",
+        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "responses": {
+          "200": {
+            "description": "Bestseller deleted",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/bestsellers/{id}/photo": {
+      "patch": {
+        "tags": ["Bestsellers"],
+        "summary": "Upload/replace the bestseller's photo",
+        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "photo": { "type": "string", "format": "binary" }
+                },
+                "required": ["photo"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Photo updated, returns the bestseller with its new photoURL",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+          },
+          "400": {
+            "description": "Missing or invalid file",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
+    },
+    "/feedback": {
+      "get": {
+        "tags": ["Feedback"],
+        "summary": "Get all feedback",
+        "description": "Returns feedback ordered by creation date (newest first) by default.",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Page number (optional, requires limit)" },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Items per page (optional, requires page)" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of feedback entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "feedback": { "type": "array", "items": { "$ref": "#/components/schemas/Feedback" } },
+                    "total": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Feedback"],
+        "summary": "Create a new feedback entry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FeedbackCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Feedback created",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+            }
+          }
+        }
+      }
+    },
+    "/feedback/{id}": {
+      "get": {
+        "tags": ["Feedback"],
+        "summary": "Get a feedback entry by id",
+        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "responses": {
+          "200": {
+            "description": "Feedback found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Feedback"],
+        "summary": "Update a feedback entry",
+        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/FeedbackUpdate" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Feedback updated",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+          },
+          "400": {
+            "description": "Empty or invalid body",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Feedback"],
+        "summary": "Delete a feedback entry",
+        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "responses": {
+          "200": {
+            "description": "Feedback deleted",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+          },
+          "404": {
+            "description": "Not found",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -194,6 +452,20 @@
         "required": true,
         "schema": { "type": "integer" },
         "description": "Bouquet id"
+      },
+      "BestsellerId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" },
+        "description": "Bestseller id"
+      },
+      "FeedbackId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer" },
+        "description": "Feedback id"
       }
     },
     "schemas": {
@@ -239,6 +511,74 @@
         "required": ["favorite"],
         "properties": {
           "favorite": { "type": "boolean", "example": true }
+        }
+      },
+      "Bestseller": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "title": { "type": "string", "example": "Crimson Romance" },
+          "description": { "type": "string", "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement." },
+          "price": { "type": "number", "example": 55 },
+          "category": { "type": "string", "example": "roses" },
+          "photoURL": { "type": "string", "format": "uri", "example": "https://flora-api.onrender.com/photos/bouquet-1.jpg" },
+          "salesCount": { "type": "integer", "example": 482, "description": "Number of times this bouquet has been sold — used to rank the list." },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "BestsellerCreate": {
+        "type": "object",
+        "required": ["title", "description", "price"],
+        "properties": {
+          "title": { "type": "string", "example": "Crimson Romance" },
+          "description": { "type": "string", "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement." },
+          "price": { "type": "number", "example": 55 },
+          "category": { "type": "string", "example": "roses" },
+          "salesCount": { "type": "integer", "default": 0 }
+        }
+      },
+      "BestsellerUpdate": {
+        "type": "object",
+        "minProperties": 1,
+        "description": "At least one field is required — an empty body returns 400.",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "price": { "type": "number" },
+          "category": { "type": "string" },
+          "salesCount": { "type": "integer" }
+        }
+      },
+      "Feedback": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "author": { "type": "string", "example": "Emma T." },
+          "text": { "type": "string", "example": "Flora made my anniversary unforgettable with their beautiful arrangement!" },
+          "rating": { "type": "integer", "minimum": 1, "maximum": 5, "example": 5 },
+          "avatarURL": { "type": "string", "format": "uri", "example": "https://gravatar.com/avatar/....png" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "FeedbackCreate": {
+        "type": "object",
+        "required": ["author", "text"],
+        "properties": {
+          "author": { "type": "string", "example": "Emma T." },
+          "text": { "type": "string", "example": "Flora made my anniversary unforgettable with their beautiful arrangement!" },
+          "rating": { "type": "integer", "minimum": 1, "maximum": 5, "default": 5 }
+        }
+      },
+      "FeedbackUpdate": {
+        "type": "object",
+        "minProperties": 1,
+        "description": "At least one field is required — an empty body returns 400.",
+        "properties": {
+          "author": { "type": "string" },
+          "text": { "type": "string" },
+          "rating": { "type": "integer", "minimum": 1, "maximum": 5 }
         }
       },
       "Error": {
