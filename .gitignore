@@ -6,4 +6,3 @@ temp/*
 !temp/.gitkeep
 public/photos/*
 !public/photos/.gitkeep
-
