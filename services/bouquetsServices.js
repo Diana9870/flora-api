@@ -26,9 +26,10 @@ function getBouquetById(id) {
 }
 
 function addBouquet(data) {
-  const photoURL = generatePhotoURL(data.title);
-
-  return Bouquet.create({ ...data, photoURL });
+  return Bouquet.create({
+    ...data,
+    photoURL: data.photoURL || generatePhotoURL(data.title),
+  });
 }
 
 async function updateBouquetById(id, data) {
