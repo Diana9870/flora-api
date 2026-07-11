@@ -6,15 +6,18 @@ const { sequelize, connectDB } = require('./config/db');
 const PORT = process.env.PORT || 3000;
 
 async function start() {
-  await connectDB();
+  try {
+    await connectDB();
 
-  // No migrations yet at this stage of the project, so sync() creates the
-  // "bouquets" table automatically if it doesn't already exist.
-  await sequelize.sync();
+    await sequelize.sync();
 
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
+  }
 }
 
 start();

@@ -28,6 +28,14 @@ app.use(express.json());
 // /public/photos/<file> and are reachable at /photos/<file>).
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Flora API is running 🌸',
+    docs: '/api-docs',
+    api: '/api',
+  });
+});
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api', apiRouter);
