@@ -8,13 +8,16 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "seed": "node seed/seedBouquets.js",
-    "seed:bouquets": "node seed/seedBouquets.js",
-    "seed:bestsellers": "node seed/seedBestsellers.js",
-    "seed:feedback": "node seed/seedFeedback.js",
-    "seed:all": "npm run seed:bouquets && npm run seed:bestsellers && npm run seed:feedback"
+  "start": "node server.js",
+  "dev": "node --watch server.js",
+
+  "seed": "npm run seed:all",
+
+  "seed:bouquets": "node seed/seedBouquets.js",
+  "seed:bestsellers": "node seed/seedBestsellers.js",
+  "seed:feedback": "node seed/seedFeedback.js",
+
+  "seed:all": "npm run seed:bouquets && npm run seed:bestsellers && npm run seed:feedback"
   },
   "dependencies": {
     "cors": "^2.8.5",
