@@ -2,27 +2,75 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Flora API",
-    "description": "REST API for the Flora shop — bouquets (CRUD, favorite toggling, photo upload), bestsellers (CRUD, photo upload) and customer feedback (CRUD).",
+    "description": "REST API for the Flora shop — bouquets (CRUD, favorite toggling, photo upload), bestsellers (CRUD, photo upload), customer feedback (CRUD), order requests and newsletter subscribers.",
     "version": "1.0.0"
   },
   "servers": [
-    { "url": "http://localhost:3000/api", "description": "Local development" },
-    { "url": "https://flora-api-q559.onrender.com/api", "description": "Production (Render)" }
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development"
+    },
+    {
+      "url": "https://flora-api-q559.onrender.com/api",
+      "description": "Production (Render)"
+    }
   ],
   "tags": [
-    { "name": "Bouquets", "description": "Endpoints for the bouquets collection" },
-    { "name": "Bestsellers", "description": "Endpoints for the bestsellers collection" },
-    { "name": "Feedback", "description": "Endpoints for customer feedback" }
+    {
+      "name": "Bouquets",
+      "description": "Endpoints for the bouquets collection"
+    },
+    {
+      "name": "Bestsellers",
+      "description": "Endpoints for the bestsellers collection"
+    },
+    {
+      "name": "Feedback",
+      "description": "Endpoints for customer feedback"
+    },
+    {
+      "name": "Orders",
+      "description": "Endpoints for order requests submitted from the storefront"
+    },
+    {
+      "name": "Subscribers",
+      "description": "Endpoints for newsletter subscribers"
+    }
   ],
   "paths": {
     "/bouquets": {
       "get": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Get all bouquets",
         "parameters": [
-          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Page number (optional, requires limit)" },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Items per page (optional, requires page)" },
-          { "name": "category", "in": "query", "schema": { "type": "string" }, "description": "Filter by category" }
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page number (optional, requires limit)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Items per page (optional, requires page)"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by category"
+          }
         ],
         "responses": {
           "200": {
@@ -32,8 +80,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "bouquets": { "type": "array", "items": { "$ref": "#/components/schemas/Bouquet" } },
-                    "total": { "type": "integer" }
+                    "bouquets": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Bouquet"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
@@ -42,13 +97,17 @@
         }
       },
       "post": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Create a new bouquet",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/BouquetCreate" }
+              "schema": {
+                "$ref": "#/components/schemas/BouquetCreate"
+              }
             }
           }
         },
@@ -56,13 +115,21 @@
           "201": {
             "description": "Bouquet created",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
             }
           },
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
             }
           }
         }
@@ -70,93 +137,191 @@
     },
     "/bouquets/{id}": {
       "get": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Get a bouquet by id",
-        "parameters": [{ "$ref": "#/components/parameters/BouquetId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BouquetId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Bouquet found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Update a bouquet",
-        "parameters": [{ "$ref": "#/components/parameters/BouquetId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BouquetId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/BouquetUpdate" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BouquetUpdate"
+              }
+            }
           }
         },
         "responses": {
           "200": {
             "description": "Bouquet updated",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
+            }
           },
           "400": {
             "description": "Empty or invalid body",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Delete a bouquet",
-        "parameters": [{ "$ref": "#/components/parameters/BouquetId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BouquetId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Bouquet deleted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
     "/bouquets/{id}/favorite": {
       "patch": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Update the favorite status of a bouquet",
-        "parameters": [{ "$ref": "#/components/parameters/BouquetId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BouquetId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/FavoriteUpdate" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FavoriteUpdate"
+              }
+            }
           }
         },
         "responses": {
           "200": {
             "description": "Favorite status updated",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation error",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
     "/bouquets/{id}/photo": {
       "patch": {
-        "tags": ["Bouquets"],
+        "tags": [
+          "Bouquets"
+        ],
         "summary": "Upload/replace the bouquet's photo",
-        "parameters": [{ "$ref": "#/components/parameters/BouquetId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BouquetId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -164,9 +329,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "photo": { "type": "string", "format": "binary" }
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 },
-                "required": ["photo"]
+                "required": [
+                  "photo"
+                ]
               }
             }
           }
@@ -174,28 +344,71 @@
         "responses": {
           "200": {
             "description": "Photo updated, returns the bouquet with its new photoURL",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bouquet" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bouquet"
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing or invalid file",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
     "/bestsellers": {
       "get": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Get all bestsellers",
         "description": "Returns bestsellers ordered by salesCount (descending) by default.",
         "parameters": [
-          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Page number (optional, requires limit)" },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Items per page (optional, requires page)" },
-          { "name": "category", "in": "query", "schema": { "type": "string" }, "description": "Filter by category" }
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page number (optional, requires limit)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Items per page (optional, requires page)"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by category"
+          }
         ],
         "responses": {
           "200": {
@@ -205,8 +418,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "bestsellers": { "type": "array", "items": { "$ref": "#/components/schemas/Bestseller" } },
-                    "total": { "type": "integer" }
+                    "bestsellers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Bestseller"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
@@ -215,13 +435,17 @@
         }
       },
       "post": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Create a new bestseller",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/BestsellerCreate" }
+              "schema": {
+                "$ref": "#/components/schemas/BestsellerCreate"
+              }
             }
           }
         },
@@ -229,13 +453,21 @@
           "201": {
             "description": "Bestseller created",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bestseller"
+                }
+              }
             }
           },
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
             }
           }
         }
@@ -243,66 +475,136 @@
     },
     "/bestsellers/{id}": {
       "get": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Get a bestseller by id",
-        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BestsellerId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Bestseller found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bestseller"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Update a bestseller",
-        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BestsellerId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/BestsellerUpdate" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BestsellerUpdate"
+              }
+            }
           }
         },
         "responses": {
           "200": {
             "description": "Bestseller updated",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bestseller"
+                }
+              }
+            }
           },
           "400": {
             "description": "Empty or invalid body",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Delete a bestseller",
-        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BestsellerId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Bestseller deleted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bestseller"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
     "/bestsellers/{id}/photo": {
       "patch": {
-        "tags": ["Bestsellers"],
+        "tags": [
+          "Bestsellers"
+        ],
         "summary": "Upload/replace the bestseller's photo",
-        "parameters": [{ "$ref": "#/components/parameters/BestsellerId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BestsellerId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -310,9 +612,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "photo": { "type": "string", "format": "binary" }
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 },
-                "required": ["photo"]
+                "required": [
+                  "photo"
+                ]
               }
             }
           }
@@ -320,27 +627,63 @@
         "responses": {
           "200": {
             "description": "Photo updated, returns the bestseller with its new photoURL",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Bestseller" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bestseller"
+                }
+              }
+            }
           },
           "400": {
             "description": "Missing or invalid file",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
     },
     "/feedback": {
       "get": {
-        "tags": ["Feedback"],
+        "tags": [
+          "Feedback"
+        ],
         "summary": "Get all feedback",
         "description": "Returns feedback ordered by creation date (newest first) by default.",
         "parameters": [
-          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Page number (optional, requires limit)" },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1 }, "description": "Items per page (optional, requires page)" }
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Page number (optional, requires limit)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Items per page (optional, requires page)"
+          }
         ],
         "responses": {
           "200": {
@@ -350,8 +693,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "feedback": { "type": "array", "items": { "$ref": "#/components/schemas/Feedback" } },
-                    "total": { "type": "integer" }
+                    "feedback": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Feedback"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
@@ -360,13 +710,17 @@
         }
       },
       "post": {
-        "tags": ["Feedback"],
+        "tags": [
+          "Feedback"
+        ],
         "summary": "Create a new feedback entry",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/FeedbackCreate" }
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackCreate"
+              }
             }
           }
         },
@@ -374,13 +728,21 @@
           "201": {
             "description": "Feedback created",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feedback"
+                }
+              }
             }
           },
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
             }
           }
         }
@@ -388,57 +750,213 @@
     },
     "/feedback/{id}": {
       "get": {
-        "tags": ["Feedback"],
+        "tags": [
+          "Feedback"
+        ],
         "summary": "Get a feedback entry by id",
-        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FeedbackId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Feedback found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feedback"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "tags": ["Feedback"],
+        "tags": [
+          "Feedback"
+        ],
         "summary": "Update a feedback entry",
-        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FeedbackId"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/FeedbackUpdate" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackUpdate"
+              }
+            }
           }
         },
         "responses": {
           "200": {
             "description": "Feedback updated",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feedback"
+                }
+              }
+            }
           },
           "400": {
             "description": "Empty or invalid body",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "tags": ["Feedback"],
+        "tags": [
+          "Feedback"
+        ],
         "summary": "Delete a feedback entry",
-        "parameters": [{ "$ref": "#/components/parameters/FeedbackId" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FeedbackId"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Feedback deleted",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Feedback" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feedback"
+                }
+              }
+            }
           },
           "404": {
             "description": "Not found",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Submit a new order request",
+        "description": "Used by the storefront's order modal to send a contact-style order request (name, phone, email, optional message).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscribers": {
+      "post": {
+        "tags": [
+          "Subscribers"
+        ],
+        "summary": "Subscribe an email to the newsletter",
+        "description": "Used by the footer's \"Subscribe for updates\" form.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriberCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscribed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email is already subscribed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -450,21 +968,27 @@
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": { "type": "integer" },
+        "schema": {
+          "type": "integer"
+        },
         "description": "Bouquet id"
       },
       "BestsellerId": {
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": { "type": "integer" },
+        "schema": {
+          "type": "integer"
+        },
         "description": "Bestseller id"
       },
       "FeedbackId": {
         "name": "id",
         "in": "path",
         "required": true,
-        "schema": { "type": "integer" },
+        "schema": {
+          "type": "integer"
+        },
         "description": "Feedback id"
       }
     },
@@ -472,26 +996,83 @@
       "Bouquet": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "example": 1 },
-          "title": { "type": "string", "example": "Peach Meadow" },
-          "description": { "type": "string", "example": "A soft and radiant arrangement of peach and blush roses." },
-          "price": { "type": "number", "example": 55 },
-          "category": { "type": "string", "example": "basket" },
-          "photoURL": { "type": "string", "format": "uri", "example": "https://flora-api.onrender.com/photos/167..._rose.jpg" },
-          "favorite": { "type": "boolean", "example": false },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Peach Meadow",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "example": "A soft and radiant arrangement of peach and blush roses.",
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "example": 55,
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "example": "basket",
+            "maxLength": 50
+          },
+          "photoURL": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://flora-api.onrender.com/photos/167..._rose.jpg"
+          },
+          "favorite": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "BouquetCreate": {
         "type": "object",
-        "required": ["title", "description", "price"],
+        "required": [
+          "title",
+          "description",
+          "price"
+        ],
         "properties": {
-          "title": { "type": "string", "example": "Peach Meadow" },
-          "description": { "type": "string", "example": "A soft and radiant arrangement of peach and blush roses." },
-          "price": { "type": "number", "example": 55 },
-          "category": { "type": "string", "example": "basket" },
-          "favorite": { "type": "boolean", "default": false }
+          "title": {
+            "type": "string",
+            "example": "Peach Meadow",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "example": "A soft and radiant arrangement of peach and blush roses.",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "example": 55,
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "example": "basket",
+            "maxLength": 50
+          },
+          "favorite": {
+            "type": "boolean",
+            "default": false
+          }
         }
       },
       "BouquetUpdate": {
@@ -499,43 +1080,124 @@
         "minProperties": 1,
         "description": "At least one field is required — an empty body returns 400.",
         "properties": {
-          "title": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "category": { "type": "string" },
-          "favorite": { "type": "boolean" }
+          "title": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "favorite": {
+            "type": "boolean"
+          }
         }
       },
       "FavoriteUpdate": {
         "type": "object",
-        "required": ["favorite"],
+        "required": [
+          "favorite"
+        ],
         "properties": {
-          "favorite": { "type": "boolean", "example": true }
+          "favorite": {
+            "type": "boolean",
+            "example": true
+          }
         }
       },
       "Bestseller": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "example": 1 },
-          "title": { "type": "string", "example": "Crimson Romance" },
-          "description": { "type": "string", "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement." },
-          "price": { "type": "number", "example": 55 },
-          "category": { "type": "string", "example": "roses" },
-          "photoURL": { "type": "string", "format": "uri", "example": "https://flora-api.onrender.com/photos/bouquet-1.jpg" },
-          "salesCount": { "type": "integer", "example": 482, "description": "Number of times this bouquet has been sold — used to rank the list." },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Crimson Romance",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement.",
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "example": 55,
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "example": "roses",
+            "maxLength": 50
+          },
+          "photoURL": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://flora-api.onrender.com/photos/bouquet-1.jpg"
+          },
+          "salesCount": {
+            "type": "integer",
+            "example": 482,
+            "description": "Number of times this bouquet has been sold — used to rank the list.",
+            "minimum": 0
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "BestsellerCreate": {
         "type": "object",
-        "required": ["title", "description", "price"],
+        "required": [
+          "title",
+          "description",
+          "price"
+        ],
         "properties": {
-          "title": { "type": "string", "example": "Crimson Romance" },
-          "description": { "type": "string", "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement." },
-          "price": { "type": "number", "example": 55 },
-          "category": { "type": "string", "example": "roses" },
-          "salesCount": { "type": "integer", "default": 0 }
+          "title": {
+            "type": "string",
+            "example": "Crimson Romance",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "example": "Our #1 best-seller: premium red roses in a classic hand-tied arrangement.",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "example": 55,
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "example": "roses",
+            "maxLength": 50
+          },
+          "salesCount": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          }
         }
       },
       "BestsellerUpdate": {
@@ -543,32 +1205,93 @@
         "minProperties": 1,
         "description": "At least one field is required — an empty body returns 400.",
         "properties": {
-          "title": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "category": { "type": "string" },
-          "salesCount": { "type": "integer" }
+          "title": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "salesCount": {
+            "type": "integer",
+            "minimum": 0
+          }
         }
       },
       "Feedback": {
         "type": "object",
         "properties": {
-          "id": { "type": "integer", "example": 1 },
-          "author": { "type": "string", "example": "Emma T." },
-          "text": { "type": "string", "example": "Flora made my anniversary unforgettable with their beautiful arrangement!" },
-          "rating": { "type": "integer", "minimum": 1, "maximum": 5, "example": 5 },
-          "avatarURL": { "type": "string", "format": "uri", "example": "https://gravatar.com/avatar/....png" },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "author": {
+            "type": "string",
+            "example": "Emma T.",
+            "maxLength": 100
+          },
+          "text": {
+            "type": "string",
+            "example": "Flora made my anniversary unforgettable with their beautiful arrangement!",
+            "maxLength": 1000
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 5
+          },
+          "avatarURL": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://gravatar.com/avatar/....png"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "FeedbackCreate": {
         "type": "object",
-        "required": ["author", "text"],
+        "required": [
+          "author",
+          "text"
+        ],
         "properties": {
-          "author": { "type": "string", "example": "Emma T." },
-          "text": { "type": "string", "example": "Flora made my anniversary unforgettable with their beautiful arrangement!" },
-          "rating": { "type": "integer", "minimum": 1, "maximum": 5, "default": 5 }
+          "author": {
+            "type": "string",
+            "example": "Emma T.",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "text": {
+            "type": "string",
+            "example": "Flora made my anniversary unforgettable with their beautiful arrangement!",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 5
+          }
         }
       },
       "FeedbackUpdate": {
@@ -576,15 +1299,132 @@
         "minProperties": 1,
         "description": "At least one field is required — an empty body returns 400.",
         "properties": {
-          "author": { "type": "string" },
-          "text": { "type": "string" },
-          "rating": { "type": "integer", "minimum": 1, "maximum": 5 }
+          "author": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "text": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 1000
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          }
         }
       },
       "Error": {
         "type": "object",
         "properties": {
-          "message": { "type": "string", "example": "Not found" }
+          "message": {
+            "type": "string",
+            "example": "Not found"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Emma Thompson"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+380671234567"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "emma@example.com"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "example": "I'd like to order \"Peach Meadow\" x1 ($55)."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderCreate": {
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "email"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100,
+            "example": "Emma Thompson"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^\\+?[\\d\\s()-]{7,20}$",
+            "example": "+380671234567"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "emma@example.com"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true,
+            "example": "I'd like to order \"Peach Meadow\" x1 ($55)."
+          }
+        }
+      },
+      "Subscriber": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "emma@example.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SubscriberCreate": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "emma@example.com"
+          }
         }
       }
     }

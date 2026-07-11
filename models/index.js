@@ -2,6 +2,8 @@ const { sequelize } = require('../config/db');
 const Bouquet = require('./Bouquet');
 const Bestseller = require('./Bestseller');
 const Feedback = require('./Feedback');
+const Order = require('./Order');
+const Subscriber = require('./Subscriber');
 
 // No associations between these models yet — bestsellers and bouquets are
 // independent collections (a bestseller is not a foreign-keyed row of
@@ -9,4 +11,11 @@ const Feedback = require('./Feedback');
 // of the API. This is the place to add associations (e.g.
 // Feedback.belongsTo(Bouquet)) if that changes later.
 
-module.exports = { sequelize, Bouquet, Bestseller, Feedback };
+module.exports = {
+  sequelize,
+  Bouquet,
+  Bestseller,
+  Feedback,
+  Order,
+  Subscriber,
+};

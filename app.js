@@ -4,8 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 
-const swaggerJsdoc = require('swagger-jsdoc');
-
 const swaggerDocument = require('./docs/swagger.json');
 const apiRouter = require('./routes');
 const notFoundHandler = require('./middlewares/notFoundHandler');
